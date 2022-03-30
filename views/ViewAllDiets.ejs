@@ -1,0 +1,29 @@
+<style>
+    table,
+    tb,
+    td {
+        border: 1px solid black;
+    }
+</style>
+<h3>Suggested diets for workouts</h3>
+</form>
+
+<table>
+    <tr>
+        <th>type</th>
+        <th>meal</th>
+        <th>diet for</th>
+
+    </tr>
+
+    <% Diet.forEach((Diet)=> { %>
+        <tr>
+            <td><%= Diet.food_type%> </td>
+            <td><%= Diet.food%> </td>
+            <td><%= Diet.bodyType%> </td>
+            <td><a href="/ViewAllDiets/<%= Diet.food %>" >add to current plan</a></td>
+        </tr>
+        <% }) %>
+
+</table>
+<td><a href="/UserMenu">return to main menu</a></td>

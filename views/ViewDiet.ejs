@@ -1,0 +1,32 @@
+<style>
+    table,
+    tb,
+    td {
+        border: 1px solid black;
+    }
+</style>
+<h3>My Workout Plan</h3>
+</form>
+
+<table>
+    <tr>
+        <th>type</th>
+        <th>meal</th>
+        <th>diet for</th>
+
+        <form action="/ViewAllDiets" method="GET">
+        <button>add to current diet</button>
+        </form>
+    </tr>
+
+    <% diet.forEach((diet)=> { %>
+        <tr>
+            <td><%= diet.Myfood_type%> </td>
+            <td><%= diet.Myfood%> </td>
+            <td><%= diet.bodyType%> </td>
+            <td><a href="/deleteDiet/<%= diet.Myfood %>" >drop meal plan</a></td>
+        </tr>
+        <% }) %>
+
+</table>
+<td><a href="/UserMenu">return to main menu</a></td>

@@ -1,0 +1,34 @@
+<style>
+    table,
+    tb,
+    td {
+        border: 1px solid black;
+    }
+</style>
+<h3>search result</h3>
+</form>
+
+<table>
+    <tr>
+        <th>Bodytype</th>
+        <th>BodyPart</th>
+        <th>exercise</th>
+        <th>reps</th>
+        <th>sets</th>
+        <th>equipment</th>
+    </tr>
+
+    <% workout.forEach((workout)=> { %>
+        <tr>
+            <td><%= workout.bodyType%> </td>
+            <td><%= workout.BodyPart%> </td>
+            <td><%= workout.exercise%> </td>
+            <td><%= workout.reps%> </td>
+            <td><%= workout._sets%> </td>
+            <td><%= workout.equipment%> </td>
+            <td><a href="/addExercise/<%= workout.exercise %>" >add to workout plan</a></td>
+        </tr>
+        <% }) %>
+
+</table>
+<td><a href="/UserMenu">return to main menu</a></td>

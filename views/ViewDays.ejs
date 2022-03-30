@@ -1,0 +1,57 @@
+<style>
+    table,
+    tb,
+    td {
+        border: 1px solid black;
+    }
+</style>
+<table>
+    <H1>Days worked out</H1>
+    <tr>
+        <th>Monday</th>
+        <th>Tuesday</th>
+        <th>Wednesday</th>
+        <th>Thursday</th>
+        <th>Friday</th>
+        <th>Saturday</th>
+        <th>Sunday</th>
+
+        <form action="/ResetDay/:IDno" method="POST">
+        <button>reset days</button>
+        </form>
+    </tr>
+
+    <% day.forEach((day)=> { %>
+    <tr>
+        <td><%= day.Monday%> </td>
+        <td><%= day.Tuesday%> </td>
+        <td><%= day.Wednesday%> </td>
+        <td><%= day.Thursday%> </td>
+        <td><%= day.Friday%> </td>
+        <td><%= day.Saturday%> </td>
+        <td><%= day.Sunday%> </td>
+        <% }) %>
+    </tr>
+
+    <th>Monday</th>
+    <th>Tuesday</th>
+    <th>Wednesday</th>
+    <th>Thursday</th>
+    <th>Friday</th>
+    <th>Saturday</th>
+    <th>Sunday</th>
+    <tr>
+    <% day.forEach((day)=> { %>
+    <tr>
+        <td><%= day.monday%> </td>
+        <td><%= day.tuesday%> </td>
+        <td><%= day.wednesday%> </td>
+        <td><%= day.thursday%> </td>
+        <td><%= day.friday%> </td>
+        <td><%= day.saturday%> </td>
+        <td><%= day.sunday%> </td>
+        <% }) %>
+    </tr>
+   
+</table>
+<td><a href="/UserMenu">return to main menu</a></td>
