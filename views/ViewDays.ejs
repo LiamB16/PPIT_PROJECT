@@ -6,6 +6,10 @@
     }
 </style>
 <table>
+    <form action="/newDays">
+        <button>new user?, click here</button>
+        </form>
+
     <H1>Days worked out</H1>
     <tr>
         <th>Monday</th>
@@ -16,11 +20,13 @@
         <th>Saturday</th>
         <th>Sunday</th>
 
-        <form action="/ResetDay/:IDno" method="POST">
-        <button>reset days</button>
+
+        <form action="/SetCurrentDays" method="GET">
+        <button>set days worked out</button>
         </form>
     </tr>
 
+    
     <% day.forEach((day)=> { %>
     <tr>
         <td><%= day.Monday%> </td>
@@ -30,9 +36,12 @@
         <td><%= day.Friday%> </td>
         <td><%= day.Saturday%> </td>
         <td><%= day.Sunday%> </td>
-        <% }) %>
-    </tr>
 
+       
+    </tr>
+    <% }) %>
+   
+    
     <th>Monday</th>
     <th>Tuesday</th>
     <th>Wednesday</th>
@@ -40,7 +49,7 @@
     <th>Friday</th>
     <th>Saturday</th>
     <th>Sunday</th>
-    <tr>
+    
     <% day.forEach((day)=> { %>
     <tr>
         <td><%= day.monday%> </td>
@@ -50,8 +59,25 @@
         <td><%= day.friday%> </td>
         <td><%= day.saturday%> </td>
         <td><%= day.sunday%> </td>
-        <% }) %>
+
+      
+    </tr>  
+     <% }) %>
+    
+     <tr>
+        <th>userID:</th>
     </tr>
-   
+
+    <% day.forEach((day)=> { %>
+        <tr>
+           <td> <%=day.IDno%> </td>
+
+           <form action="/ResetDay/<%= day.IDno %>">
+            <button>reset days</button>
+            </form>
+
+           
+        </tr>
+    <% }) %>
 </table>
 <td><a href="/UserMenu">return to main menu</a></td>

@@ -13,7 +13,7 @@
         <th>type</th>
         <th>meal</th>
         <th>diet for</th>
-
+        <th>picture</th>
         <form action="/ViewAllDiets" method="GET">
         <button>add to current diet</button>
         </form>
@@ -24,6 +24,7 @@
             <td><%= diet.Myfood_type%> </td>
             <td><%= diet.Myfood%> </td>
             <td><%= diet.bodyType%> </td>
+            <td><img src="<%= diet.pic%>" width=100, height=100></td>
             <td><a href="/deleteDiet/<%= diet.Myfood %>" >drop meal plan</a></td>
         </tr>
         <% }) %>

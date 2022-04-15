@@ -9,7 +9,6 @@ var app = express()
 
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(cors())
-
 app.set('view engine', 'ejs')
 
 //renders login and register page on load
@@ -20,15 +19,34 @@ app.get('/', (req, res)=> {
 app.get('/Login', (req, res)=>{
   res.render("Login")
 })
-  //logins to current account
-app.get('/Login/:User/:Password', (req, res) => {
-    MySqlDAO.getUser(req.params.User, req.params.Password)
+
+//gets user login page
+app.get('/UserMenu', (req, res)=>{
+  MySqlDAO.UpdatePlanTables()
+  MySqlDAO.Currentlogin2()
+  .then((data) => {
+      console.log(data)
+      res.render("UserMenu", {Users:data} )
+      
+  })
+  .catch((error) => {
+    console.log("not ok")
+   res.send(error)
+  })
+})
+
+//logins to current account
+app.post('/Login', (req, res) => {
+    //resets the current user logged in
+    MySqlDAO.logout()
+    //gets login of user
+    MySqlDAO.getUser(req.body.User, req.body.Password)
+    //makes a log for who is currently logged in and tracks data changes
+    MySqlDAO.currentlogin(req.body.User)
         .then((data) => {
-         if(data)
-          {
-            console.log("logged in")
-            res.render("UserMenu")
-          } 
+            console.log(data)
+            res.redirect("/UserMenu")
+          
         })
         .catch((error) => {
           console.log("not ok")
@@ -40,11 +58,10 @@ app.get('/CreateUser', (req, res)=>{
     res.render("CreateUser")
   })
   //adds new user
-  app.get('/CreateUser/:User/:Password', (req, res) => {
-    MySqlDAO.addUser(req.params.User, req.params.Password)
+  app.post('/CreateUser', (req, res) => {
+    MySqlDAO.addUser(req.body.User, req.body.Password)
     .then(() => {
         res.redirect('/')
-        console.log("add")
     })
     .catch((error) => {
         res.send(error)
@@ -52,12 +69,9 @@ app.get('/CreateUser', (req, res)=>{
     })
   
   })
-//brings user to register page
-app.get('/UserMenu', (req, res)=>{
-  res.render("UserMenu")
-})
     //views workout plan based on ID number
     app.get('/ViewPlan/:IDno', (req, res)=>{
+      MySqlDAO.Currentlogin2()
       MySqlDAO.ViewPlan(req.params.IDno)
       .then((result) => {
           console.log("ok")
@@ -83,11 +97,55 @@ app.get('/UserMenu', (req, res)=>{
 
     //views days user worked out
     app.get('/ViewDays/:IDno', (req, res)=>{
+      MySqlDAO.Currentlogin2()
       MySqlDAO.ViewDays(req.params.IDno)
+     
       .then((result) => {
-          console.log("ok")
+          console.log(result)
+          
            //loads last weeks and this weeks days worked out
            res.render("ViewDays", {day:result})
+      })
+      .catch((error) => {
+          res.send(error)
+      })
+    })
+     //adds diet to users account based on id number and food name
+     app.get('/newDays', (req, res)=>{
+      MySqlDAO.newDays()
+      MySqlDAO.newDays2()
+      .then((result) => {
+          console.log(result)
+          MySqlDAO.UpdatePlanTables()
+          res.redirect("/UserMenu")
+      })
+      .catch((error) => {
+          res.send(error)
+          console.log(error)
+      })
+    })
+    //brings user to register page
+     app.get('/SetCurrentDays', (req, res)=>{
+      MySqlDAO.Currentlogin2()
+  .then((data) => {
+      console.log(data)
+      res.render("SetCurrentDays", {Users:data} )
+    })
+  .catch((error) => {
+      res.send(error)
+  })
+})
+
+     //sets the days user worked out this week
+     app.post('/SetCurrentDays/:IDno', (req, res)=>{
+      MySqlDAO.SetCurDay(req.body.Monday, req.body.Tuesday, req.body.Wednesday, req.body.Thursday, req.body.Friday, req.body.Saturday, req.body.Sunday)
+      MySqlDAO.SetCurDay2()
+      MySqlDAO.SetCurDay3()
+      .then((result) => {
+          console.log(result)
+            //once days are set, returns to days page
+            MySqlDAO.UpdatePlanTables()
+          res.redirect("/UserMenu")
       })
       .catch((error) => {
           res.send(error)
@@ -97,9 +155,11 @@ app.get('/UserMenu', (req, res)=>{
     //resets current week days
     app.get('/ResetDay/:IDno', (req, res)=>{
       MySqlDAO.ResetDay(req.params.IDno)
+      MySqlDAO.ResetDay2(req.params.IDno)
+      MySqlDAO.ResetDay3(req.params.IDno)
       .then(() => {
-        //once days are reset, returns to days page
-         res.redirect("/ViewDays/:IDno")
+        //once days are reset, returns to main menu page
+         res.redirect("/UserMenu")
       })
       .catch((error) => {
         console.log(error)
@@ -120,10 +180,12 @@ app.get('/UserMenu', (req, res)=>{
       })
     })
     //adds diet to users account based on id number and food name
-    app.get('/ViewAllDiets/:food/:IDno', (req, res)=>{
-      MySqlDAO.addDiet(req.params.food, req.params.IDno)
+    app.get('/ViewAllDiets/:food', (req, res)=>{
+      MySqlDAO.addDiet(req.params.food)
       .then((result) => {
-          console.log("ok")
+          console.log(result)
+          MySqlDAO.UpdatePlanTables()
+          res.redirect("/UserMenu")
       })
       .catch((error) => {
           res.send(error)
@@ -132,14 +194,24 @@ app.get('/UserMenu', (req, res)=>{
     })
     //loads page for creating the workout plan
     app.get('/CreatePlan', (req, res)=>{
-      res.render("CreatePlan")
+      MySqlDAO.AllExercise()
+      .then((result) => {
+          console.log(result)
+          MySqlDAO.UpdatePlanTables()
+           res.render("CreatePlan", {workout: result})
+      })
+      .catch((error) => {
+          res.send(error)
+          console.log(error)
+      })
     })
 
     //searches workout programmes based on gender, body type and body parts
-    app.get('/CreatePlan/:bodyType/:BodyPart/:gender', (req, res)=>{
-      MySqlDAO.SearchExercise(req.params.bodyType, req.params.BodyPart, req.params.gender)
+    app.post('/CreatePlan', (req, res)=>{
+      MySqlDAO.SearchExercise(req.body.bodyType, req.body.BodyPart, req.body.gender)
       .then((result) => {
-          console.log("ok")
+          console.log(result)
+          MySqlDAO.UpdatePlanTables()
            res.render("CreatePlan2", {workout: result})
       })
       .catch((error) => {
@@ -149,10 +221,13 @@ app.get('/UserMenu', (req, res)=>{
     })
     
      //adds exercise to workout plan based on 
-     app.get('/addExercise/:exercise/:IDno', (req, res)=>{
-      MySqlDAO.addExercise(req.params.exercise, req.params.IDno)
+     app.get('/addExercise/:exercise', (req, res)=>{
+      MySqlDAO.addExercise(req.params.exercise)
+      MySqlDAO.addExercise2()
       .then((result) => {
           console.log(result)
+          MySqlDAO.UpdatePlanTables()
+          res.redirect("/UserMenu")
       })
       .catch((error) => {
           res.send(error)
@@ -161,17 +236,42 @@ app.get('/UserMenu', (req, res)=>{
     })
 
      //deletes a diet from user diet plan based on food name and id number
-     app.get('/deleteDiet/:Myfood/:IDno', (req, res)=>{
-      MySqlDAO.deleteDiet(req.params.Myfood, req.params.IDno)
+     app.get('/deleteDiet/:Myfood', (req, res)=>{
+      MySqlDAO.deleteDiet(req.params.Myfood)
       .then((result) => {
           console.log(result)
-          res.redirect("/ViewDiet/:IDno")
+          res.redirect("/UserMenu")
       })
       .catch((error) => {
           res.send(error)
           console.log(error)
       })
     })
+
+      //deletes a diet from user diet plan based on food name and id number
+      app.get('/deletePlan/:My_exercise/:IDno', (req, res)=>{
+        MySqlDAO.deletePlan(req.params.My_exercise, req.params.IDno)
+        .then((result) => {
+            console.log(result)
+            res.redirect("/userMenu")
+        })
+        .catch((error) => {
+            res.send(error)
+            console.log(error)
+        })
+      })
+       //deletes a diet from user diet plan based on food name and id number
+       app.get('/logout', (req, res)=>{
+        MySqlDAO.logout()
+        .then((result) => {
+            console.log(result)
+            res.redirect("/login")
+        })
+        .catch((error) => {
+            res.send(error)
+            console.log(error)
+        })
+      })
   app.listen(3004, () => {
     console.log("Listening on port 3004...")
 })

@@ -16,8 +16,14 @@
         <th>reps</th>
         <th>sets</th>
         <th>equipment</th>
+        <th>picture</th>
     </tr>
 
+    <% workout.forEach((workout)=> { %>
+        <tr>
+            <%=workout.IDno%> 
+        </tr>
+        <% }) %>
     <% workout.forEach((workout)=> { %>
         <tr>
             <td><%= workout.My_bodyType%> </td>
@@ -26,9 +32,9 @@
             <td><%= workout.My_reps%> </td>
             <td><%= workout.My_sets%> </td>
             <td><%= workout.My_equipment%> </td>
-            <td><a href="/delete" >drop workout</a></td>
+            <td><img src="<%= workout.pic%>" width=100, height=100></td>
+            <td><a href="/deletePlan/<%=workout.My_exercise%>/<%=workout.IDno%>" >drop workout</a></td>
         </tr>
         <% }) %>
-
 </table>
 <td><a href="/UserMenu">return to main menu</a></td>

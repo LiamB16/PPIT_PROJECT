@@ -1,6 +1,15 @@
+<style>
+    table,
+    tb,
+    td {
+        border: 1px solid black;
+    }
+</style>
+
 <body>
-<h1>Craete a new workout plan</h1>
-<form action="/CreatePlan" method="GET">
+<h1>Create a new workout plan</h1>
+<td><a href="/UserMenu">return to main menu</a></td>
+<form action="/CreatePlan" method="POST">
 
 <label>select bodytype:</label>
 <select name="bodyType" id="bodyType">
@@ -10,10 +19,16 @@
 </select>
 
 <label>select bodypart to train:</label>
-<select name="bodyPart" id="bodyPart">
+<select name="BodyPart" id="BodyPart">
     <option value="none">none</option>
     <option value="biceps">biceps</option>
     <option value="triceps">triceps</option>
+    <option value="thighs">thighs</option>
+    <option value="chest">chest</option>
+    <option value="back">back</option>
+    <option value="glutes">glutes</option>
+    <option value="abs">abs</option>
+    
 </select>
 
 <label>select gender:</label>
@@ -26,6 +41,33 @@
 
 <button type="submit">search</button>
 </form>
+
+<table>
+    <tr>
+        <th>Bodytype</th>
+        <th>BodyPart</th>
+        <th>exercise</th>
+        <th>reps</th>
+        <th>sets</th>
+        <th>equipment</th>
+        <th>picture</th>
+    </tr>
+
+    <% workout.forEach((workout)=> { %>
+        <tr>
+            <td><%= workout.bodyType%> </td>
+            <td><%= workout.BodyPart%> </td>
+            <td><%= workout.exercise%> </td>
+            <td><%= workout.reps%> </td>
+            <td><%= workout._sets%> </td>
+            <td><%= workout.equipment%> </td>
+            <td><img src="<%= workout.pic%>" width=100, height=100></td>
+            
+            <td><a href="/addExercise/<%= workout.exercise %>" >add to workout plan</a></td>
+        </tr>
+        <% }) %>
+
+</table>
 </body>
 
 

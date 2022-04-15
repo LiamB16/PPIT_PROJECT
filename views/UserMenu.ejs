@@ -1,11 +1,21 @@
 <body>
-    <h1></h1>
-    <h1>welcome</h1>
-    <ul>
-    <li><a href="/ViewPlan">View Current training plan</a></td>
-    <li><a href="/ViewDays">View days worked out</a></td>
-    <li><a href="/ViewDiet">View current diet</a></td>
-    <li><a href="/CreatePlan">Create new workout plan</a></td>
-    <li><a href="/">log out</a></td>
-    </ul>
+    <table>
+        <tr>
+            <th>userID:</th>
+        </tr>
+    
+        <% Users.forEach((Users)=> { %>
+            <tr>
+                <td><%=Users.IDno%> </td>
+            </tr>
+            <ul>
+                <li><a href="/ViewPlan/<%=Users.IDno%>">View Current training plan</a></td>
+                <li><a href="/ViewDays/<%=Users.IDno%>">View days worked out</a></td>
+                <li><a href="/ViewDiet/<%=Users.IDno%>">View current diet</a></td>
+            </ul>
+        <% }) %>
+        <li><a href="/CreatePlan">Create new workout plan</a>
+        <li><a href="/logout">log out</a>
+    </table>
+   
 </body>
